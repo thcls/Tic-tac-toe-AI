@@ -1,10 +1,12 @@
 import {Camp} from "./camp.js"
+
 let time = 0
 let winner = null
 const buttonlist = document.querySelectorAll('.camp')
 const campo = []
 let line = []
 let winLine = []
+let no = ''
 for(let button in buttonlist){
     let square = new Camp(buttonlist[button])
     line.push(square)
@@ -14,6 +16,9 @@ for(let button in buttonlist){
     }
 }
 document.addEventListener('click', (event) =>{
+    if(time%2!==0){
+        return
+    }
     let element = event.target
     let clicked = clickField(element)
     if(campo[clicked[0]][clicked[1]].click(time%2===0)){
@@ -22,8 +27,19 @@ document.addEventListener('click', (event) =>{
             alert('win')
             win(winLine)
         }
+        
+        setTimeout(()=>{
+            aiPlays()
+        },1500)
     }
 })
+function aiPlays(){
+    let campString = campStringify()
+    let position = getCoordinate(campString, no)
+    clickField(position[0], position[1])
+
+    time++
+}
 function clickField(element){
     let elementClassList = element.classList
     let elementClass = elementClassList[elementClassList.length-1]
@@ -88,4 +104,26 @@ function test(line){
     }, '')
     winLine = line
     return (lineString.includes('XXX') || lineString.includes('OOO'))
+}
+function campStringify(){
+    let camp = ''
+    for (line in campo){
+        for(i in line){
+            camp += i
+        }
+    }
+    return camp
+}
+function getCoordinate(camp, no) {
+    let line = 0
+    let colum = 0
+    for(let i = 0; i>8;i++){
+        if(no.camp[i]!==camp[i]){
+            return [colum, line]
+        }else if(line === 2){
+            line = 0
+            colum++
+        }
+        line++   
+    }
 }
