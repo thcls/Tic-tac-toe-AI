@@ -3,7 +3,7 @@ export class Camp{
         this.x = "url('assets/img/close.png')"
         this.o = "url('assets/img/circle.png')"
         this.element = element
-        this.content = ''
+        this.content = '*'
     }
     click(time){
         if(this.content === 'O'|| this.content === 'X'){

@@ -4,6 +4,7 @@ class No{
         this.deep = time
         this.weight = 0
         this.camp = camp
+        this.father = null
         this.nos = []
     }
     winTest(){
@@ -15,22 +16,23 @@ class No{
             }
         }
         for(let i = 0;i>= 2;i++){
-            line = this.camp.slice(i, i+1) + this.camp.slice(i+3, (i+3)+1) + this.camp.slice(i+6, (i+6)+1)
+            line = this.camp[i] + this.camp[i+3] + this.camp[i+6]
             if (test(line)){
                 return true
             }
         }
-        for(let i = 0;i > 2;i++){
-            for(let j = 0;j > 2;j++){
-                this.camp[j][i]
-            }
-            if (test(line)){
-                return true
-            }
+        line = this.camp[0] + this.camp[4] + this.camp[8]
+        if (test(line)){
+            return true
+        }
+        line = this.camp[2] + this.camp[4] + this.camp[6]
+        if (test(line)){
+            return true
         }
         if(this.deep === 8){
             this.leaf = true
             this.winner = 0
+            this.weightTell()
         }
     }
     test(line){
@@ -47,6 +49,7 @@ class No{
             }else{
                 this.winner = 1
             }
+            this.weightTell()
             return true
         }
     }
@@ -67,9 +70,26 @@ class No{
     }
     appendChild(camp, father){
         let child = new No(father.deep+1, camp)
+        child.father = father
         if(father.deep >= 4){
-
+            child.winTest()
         }
-        father.nos.push()
+        father.nos.push(child)
+    }
+    weightTell(){
+        if(this.father === null){
+            return
+        } 
+        this.father.weight += this.weight 
+        this.father.weightTell()
+    }
+    nextNo(campString){
+        for(no in this.nos){
+            if(no.includes(campString)){
+                return no
+            }
+        }
     }
 }
+let root = new No(0)
+console.log(root)
