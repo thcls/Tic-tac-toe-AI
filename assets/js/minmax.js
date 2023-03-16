@@ -1,95 +1,106 @@
-class No{
-    constructor(time, camp = '*********'){
+export class No{
+    constructor(time, camp = 'O**XO*X*O'){
         this.leaf = false
         this.deep = time
         this.weight = 0
         this.camp = camp
         this.father = null
-        this.nos = []
+        this.children = []
+        this
     }
     winTest(){
         let line = ''
-        for(let i = 3;i>= 9 ;i += 3){
+        for(let i = 3;i<= 9 ;i += 3){
             line = this.camp.slice(i - 3, i)
-            if (test(line)){
+            if (this.test(line)){
                 return true
             }
         }
-        for(let i = 0;i>= 2;i++){
+        for(let i = 0;i <= 2;i++){
             line = this.camp[i] + this.camp[i+3] + this.camp[i+6]
-            if (test(line)){
+            if (this.test(line)){
                 return true
             }
         }
         line = this.camp[0] + this.camp[4] + this.camp[8]
-        if (test(line)){
+        if (this.test(line)){
             return true
         }
         line = this.camp[2] + this.camp[4] + this.camp[6]
-        if (test(line)){
+        if (this.test(line)){
             return true
         }
         if(this.deep === 8){
             this.leaf = true
-            this.winner = 0
-            this.weightTell()
+            this.weight = 1
+            this.weightTell(1)
+            return false
         }
     }
     test(line){
         let playerMarker = ''
-        if(this.deep%2==0){
+       
+        if((this.deep)%2===0){
             playerMarker = 'OOO'
         }else{
             playerMarker = 'XXX'
         }
-        if (line.includes(playerMarker)){
+        if((this.deep)%2===1){
+        }
+        if (line===playerMarker){
             this.leaf = true
+            
             if (this.deep%2==0){
-                this.winner = -1
+                this.weight = -1
             }else{
-                this.winner = 1
+                this.weight = 1
             }
-            this.weightTell()
+            this.weightTell(this.weight)
             return true
+        }else{
+            return false
         }
     }
-    generateChild(father, time){
+    generateChild(leafs){
         let playerMarker = ''
-        if(time%2===0 && !father.leaf){
+        if((this.deep+1)%2===0){
             playerMarker = 'O'
         }else{
             playerMarker = 'X'
         }
-        for(index of father.camp){
-            if(father.camp[index] === '*'){
-                let newCamp = father.camp
-                newCamp[index] = playerMarker
-                this.appendChild(newCamp, father)
+        for(let index = 0;index <= 8;index++){
+            if(this.camp.charAt(index) === '*'){
+                let newCamp = this.camp.slice(0,index)+playerMarker+this.camp.slice(index+1)
+                this.appendChild(newCamp, this,leafs)
             }
         }
     }
-    appendChild(camp, father){
+    appendChild(camp, father, leafs){
         let child = new No(father.deep+1, camp)
         child.father = father
-        if(father.deep >= 4){
-            child.winTest()
+        child.winTest()
+        if(father.deep >= 3){
+            
+            
         }
-        father.nos.push(child)
+        father.children.push(child)
+        if(!child.leaf){
+            leafs.push(child)
+        }
     }
-    weightTell(){
-        if(this.father === null){
+    weightTell(value){
+        if(this.weight===0||this.father === null||this.father.children.length === 0){
             return
-        } 
-        this.father.weight += this.weight 
-        this.father.weightTell()
+        }
+        let num = (value/this.father.children.length).toFixed(2)
+        this.father.weight += parseFloat((num))
+        this.father.weightTell(value)
     }
     nextNo(campString){
-        for(no in this.nos){
+        for(let no in this.children){
             if(no.includes(campString)){
                 return no
             }
         }
     }
 }
-let root = new No(0)
-console.log(root)
