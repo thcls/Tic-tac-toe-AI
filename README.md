@@ -4,4 +4,4 @@ Implementação do jogo da velha onde o player jogará contra uma AI que usa o a
 
 Todos os aspectos do jogo serão implementados utilizando Javascript, HTML e CSS.
 
-acesse: [Campo minado](https://thcls.github.io/Tic-tac-toe-AI/).
+acesse: [Tic tac toe](https://thcls.github.io/Tic-tac-toe-AI/).
