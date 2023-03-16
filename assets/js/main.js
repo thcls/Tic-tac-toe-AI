@@ -1,44 +1,96 @@
 import {Camp} from "./camp.js"
+import { No } from "./minmax.js"
 
 let time = 0
-let winner = null
-const buttonlist = document.querySelectorAll('.camp')
+const buttonList = document.querySelectorAll('.camp')
 const campo = []
-let line = []
 let winLine = []
+let line = []
 let no = ''
-for(let button in buttonlist){
-    let square = new Camp(buttonlist[button])
+let root = ''
+let leafs = []
+let timer = []
+let gameOver = false
+
+for(let button in buttonList){
+    let square = new Camp(buttonList[button])
     line.push(square)
     if((1+button)%3 === 0) {
         campo.push(line)
         line = []
     }
 }
+
 document.addEventListener('click', (event) =>{
-    if(time%2!==0){
+    let element = event.target
+    if('Restart' === event.target.innerText){
+        restart()
+        return
+    }else if(time%2!==0 || gameOver){
         return
     }
-    let element = event.target
+    
     let clicked = clickField(element)
     if(campo[clicked[0]][clicked[1]].click(time%2===0)){
         time++
         if(winTest()){
-            alert('win')
             win(winLine)
         }
-        
         setTimeout(()=>{
-            aiPlays()
-        },1500)
+            if(time===1){
+                root = new No(0, campStringify())
+                no = root
+                leafs.push(root)
+                while(leafs.length > 0){
+                    let i = leafs.shift()
+                    i.generateChild(leafs)
+                }
+                aiPlays()
+            }else{
+                getNo()
+                aiPlays()
+                if(winTest()){
+                    win(winLine)
+                }
+            }
+            time++
+        },500)
+        console.log(time, time%2)
     }
 })
+function restart(){
+    timer.map((value)=>{clearInterval(value)})
+    no = ''
+    root = ''
+    leafs = []
+    time = 0
+    gameOver = false
+    for(let buttonLine of campo){
+        buttonLine.map((value)=>{value.clear()})
+    }
+}
+function getNo(){
+    let campString = campStringify()
+    for(let camp of no.children){
+        if(camp.camp===campString){
+            no = camp
+            console.log('O',no)
+            return
+        }
+    }
+}
 function aiPlays(){
     let campString = campStringify()
+    let best = no.children[0]
+    for(let camp of no.children){
+        if(camp.weight >= best.weight){
+            best = camp
+        }
+    }
+    no = best
+    console.log('X',best)
     let position = getCoordinate(campString, no)
-    clickField(position[0], position[1])
-
-    time++
+    campo[position[0]][position[1]].click(time%2===0)
 }
 function clickField(element){
     let elementClassList = element.classList
@@ -49,20 +101,17 @@ function clickField(element){
     return clicked
 }
 function win(line){
-    line.map((value)=>{
-        let index = 0
-        let t = value
-        setInterval((t, index)=>{
-            let color
-            if(index%2){
-                color = 'green'
-            }else{
-                color = 'white'
-            }
-            t.element.style.backgroundColor = color
-            index++
-        },200)
-    })     
+    time--
+    let i = 0
+    for (let button of line){
+        setTimeout(()=>{
+            timer.push(setInterval(()=>{
+                button.win()
+            },500))
+        },140*i)
+        i++
+    }
+    gameOver = true
 }
 function winTest(){
     for(let i in campo){
@@ -90,8 +139,10 @@ function winTest(){
     }
 
     line = []
+    let j = 0
     for(let i = 2;i >= 0;i--){
-        line.push(campo[i][i]) 
+        line.push(campo[j][i])
+        j++
     }
     if (test(line)){
         return true
@@ -107,9 +158,9 @@ function test(line){
 }
 function campStringify(){
     let camp = ''
-    for (line in campo){
-        for(i in line){
-            camp += i
+    for (let line of campo){
+        for(let i of line){
+            camp += i.content
         }
     }
     return camp
@@ -117,12 +168,13 @@ function campStringify(){
 function getCoordinate(camp, no) {
     let line = 0
     let colum = 0
-    for(let i = 0; i>8;i++){
-        if(no.camp[i]!==camp[i]){
+    for(let i = 0; i<=8;i++){
+        if(no.camp.charAt(i)!==camp.charAt(i)){
             return [colum, line]
         }else if(line === 2){
             line = 0
             colum++
+            continue
         }
         line++   
     }
