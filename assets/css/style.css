@@ -16,6 +16,7 @@ body {
   font-family: 'Open sans', sans-serif;
   font-size: 1.3em;
   line-height: 1.5em;
+  text-align: center;
 }
 
 .container {
@@ -27,6 +28,15 @@ body {
   border-radius: 10px;
 }
 
+.restart{
+  padding: 2% 6%;
+  font-size: large;
+  border-radius: 10px;
+  border: none;
+  background-color: white;
+  text-align: center;
+  max-width: 640px;
+}
 .score{
   display: inline;
   margin-left: 17%;
