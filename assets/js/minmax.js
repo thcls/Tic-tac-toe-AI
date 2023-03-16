@@ -6,7 +6,6 @@ export class No{
         this.camp = camp
         this.father = null
         this.children = []
-        this
     }
     winTest(){
         let line = ''
@@ -53,7 +52,7 @@ export class No{
             if (this.deep%2==0){
                 this.weight = -1
             }else{
-                this.weight = 1
+                this.weight = 0.5
             }
             this.weightTell(this.weight)
             return true
@@ -89,11 +88,11 @@ export class No{
         }
     }
     weightTell(value){
-        if(this.weight===0||this.father === null||this.father.children.length === 0){
+        if(this.weight===0||this.father === null){
             return
         }
         let num = (value/this.father.children.length).toFixed(2)
-        this.father.weight += parseFloat((num))
+        this.father.weight += parseFloat(num)
         this.father.weightTell(value)
     }
     nextNo(campString){

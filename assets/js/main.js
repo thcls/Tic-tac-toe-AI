@@ -82,9 +82,20 @@ function getNo(){
 function aiPlays(){
     let campString = campStringify()
     let best = no.children[0]
+    let secondBest = 0
     for(let camp of no.children){
-        if(camp.weight >= best.weight){
+        if(camp.leaf){
             best = camp
+            break
+        }else if(camp.weight >= best.weight){
+            secondBest = best
+            best = camp
+        }
+    }
+    for(let camp of best.children){
+        if(camp.leaf){
+            best = secondBest
+            break
         }
     }
     no = best
