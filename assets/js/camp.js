@@ -17,11 +17,23 @@ export class Camp{
         } 
         return true
     }
-    backgroundImg(img) {
+    backgroundImg(img){
         this.element.style.backgroundImage = img
         this.element.style.backgroundRepeat = 'no-repeat'
         this.element.style.backgroundSize = '60%'
         this.element.style.backgroundPosition = 'center'
+    }
+    clear(){
+        this.content = '*'
+        this.element.style.backgroundImage = 'none'
+        this.element.style.backgroundColor = '#ffffff'
+    }
+    win(){
+        let color = '#55ff55'
+        if(this.element.style.backgroundColor === 'rgb(85, 255, 85)'){
+            color = '#ffffff'
+        }
+        this.element.style.backgroundColor = color
     }
 }
  
