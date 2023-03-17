@@ -92,7 +92,7 @@ function aiPlays(){
     }
 
     for(let camp of best.children){
-        if(camp.leaf && camp.deep !== 8){
+        if(camp.leaf && camp.deep !== 7){
             best = secondBest
             break
         }
