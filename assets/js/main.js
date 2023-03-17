@@ -55,7 +55,6 @@ document.addEventListener('click', (event) =>{
             }
             time++
         },500)
-        console.log(time, time%2)
     }
 })
 function restart(){
@@ -74,7 +73,6 @@ function getNo(){
     for(let camp of no.children){
         if(camp.camp===campString){
             no = camp
-            console.log('O',no)
             return
         }
     }
@@ -92,14 +90,14 @@ function aiPlays(){
             best = camp
         }
     }
+
     for(let camp of best.children){
-        if(camp.leaf){
+        if(camp.leaf && camp.deep !== 8){
             best = secondBest
             break
         }
     }
     no = best
-    console.log('X',best)
     let position = getCoordinate(campString, no)
     campo[position[0]][position[1]].click(time%2===0)
 }
