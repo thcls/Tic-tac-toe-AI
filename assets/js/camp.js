@@ -6,7 +6,7 @@ export class Camp{
         this.content = '*'
     }
     click(time){
-        if(this.content === 'O'|| this.content === 'X'){
+        if(this.content !== '*'){
             return false
         }else if(time){
             this.content = 'O'
@@ -27,6 +27,8 @@ export class Camp{
         this.content = '*'
         this.element.style.backgroundImage = 'none'
         this.element.style.backgroundColor = '#ffffff'
+        let tab = document.querySelector('.tab-section')
+        tab.style.backgroundColor = '#ffffff'
     }
     win(){
         let color = '#55ff55'
@@ -35,5 +37,8 @@ export class Camp{
         }
         this.element.style.backgroundColor = color
     }
+    draw(){
+        let tab = document.querySelector('.tab-section')
+        tab.style.backgroundColor = '#ffff40'
+    }
 }
- 

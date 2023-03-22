@@ -29,35 +29,57 @@ document.addEventListener('click', (event) =>{
     }else if(time%2!==0 || gameOver){
         return
     }
-    
-    let clicked = clickField(element)
-    if(campo[clicked[0]][clicked[1]].click(time%2===0)){
-        time++
-        if(winTest()){
-            win(winLine)
-        }
-        setTimeout(()=>{
-            if(time===1){
-                root = new No(0, campStringify())
-                no = root
-                leafs.push(root)
-                while(leafs.length > 0){
-                    let i = leafs.shift()
-                    i.generateChild(leafs)
-                }
-                aiPlays()
-            }else{
+    let clicked
+    try {
+        clicked = clickField(element)
+
+        if(campo[clicked[0]][clicked[1]].click(time%2===0)){
+            time++
+            try {
                 getNo()
-                aiPlays()
+                console.log('O', time,no)
+            }catch(error){
+                
+            }finally{
                 if(winTest()){
                     win(winLine)
+                    return
+                }else if(no.deep === 8){
+                    draw()
+                    gameOver = true
+                    return
                 }
             }
-            time++
-        },500)
+            setTimeout(()=>{
+                if(time===1){
+                    root = new No(0, campStringify())
+                    no = root
+                    leafs.push(root)
+                    while(leafs.length > 0){
+                        let i = leafs.shift()
+                        i.generateChild(leafs)
+                    }
+                    no.defineWeight()
+                    console.log('O', time, no)
+                    aiPlays()
+                    time++
+                    console.log('X', time,no)
+                }else{
+                    aiPlays()
+                    time++
+                    console.log('X', time,no)
+                    if(winTest()){
+                        win(winLine)
+                    }
+                }
+            },500)
+        }
+    }catch(error){
+        return
     }
 })
 function restart(){
+    console.clear()
     timer.map((value)=>{clearInterval(value)})
     no = ''
     root = ''
@@ -79,25 +101,14 @@ function getNo(){
 }
 function aiPlays(){
     let campString = campStringify()
-    let best = no.children[0]
-    let secondBest = 0
-    for(let camp of no.children){
-        if(camp.leaf){
-            best = camp
-            break
-        }else if(camp.weight >= best.weight){
-            secondBest = best
-            best = camp
+    no.children.sort((a,b) => {
+        if(a.weight > b.weight){
+            return -1 
+        }else{
+            return 1
         }
-    }
-
-    for(let camp of best.children){
-        if(camp.leaf && camp.deep !== 7){
-            best = secondBest
-            break
-        }
-    }
-    no = best
+    })
+    no = no.children[0]
     let position = getCoordinate(campString, no)
     campo[position[0]][position[1]].click(time%2===0)
 }
@@ -121,6 +132,9 @@ function win(line){
         i++
     }
     gameOver = true
+}
+function draw(){
+    setTimeout(()=>{ campo[0][0].draw()},300)
 }
 function winTest(){
     for(let i in campo){
