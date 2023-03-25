@@ -72,7 +72,8 @@ button:hover{
 }
 a:link, a:visited{
   color: white;
+  text-decoration: none;
 }
 a:hover {
-  color: blue;
+  text-decoration:underline ;
 }
