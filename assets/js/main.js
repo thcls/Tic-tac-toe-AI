@@ -37,7 +37,6 @@ document.addEventListener('click', (event) =>{
             time++
             try {
                 getNo()
-                console.log('O', time,no)
             }catch(error){
                 
             }finally{
@@ -59,15 +58,12 @@ document.addEventListener('click', (event) =>{
                         let i = leafs.shift()
                         i.generateChild(leafs)
                     }
-                    no.defineWeight()
-                    console.log('O', time, no)
+                    no.weightDefine()
                     aiPlays()
                     time++
-                    console.log('X', time,no)
                 }else{
                     aiPlays()
                     time++
-                    console.log('X', time,no)
                     if(winTest()){
                         win(winLine)
                     }
@@ -79,7 +75,6 @@ document.addEventListener('click', (event) =>{
     }
 })
 function restart(){
-    console.clear()
     timer.map((value)=>{clearInterval(value)})
     no = ''
     root = ''

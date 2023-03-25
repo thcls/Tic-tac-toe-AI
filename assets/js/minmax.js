@@ -1,8 +1,8 @@
 export class No{
-    constructor(time, camp = 'O**XO*X*O'){
+    constructor(time, camp = '*********'){
         this.leaf = false
         this.deep = time
-        this.weight = 0
+        this.weight = undefined
         this.camp = camp
         this.father = null
         this.children = []
@@ -31,8 +31,7 @@ export class No{
         }
         if(this.deep === 8){
             this.leaf = true
-            this.weight = 1
-            this.weightTell(1)
+            this.weight = 0
             return false
         }
     }
@@ -44,20 +43,15 @@ export class No{
         }else{
             playerMarker = 'XXX'
         }
-        if((this.deep)%2===1){
-        }
         if (line===playerMarker){
             this.leaf = true
             
             if (this.deep%2==0){
                 this.weight = -1
             }else{
-                this.weight = 0.5
+                this.weight = 1
             }
-            this.weightTell(this.weight)
             return true
-        }else{
-            return false
         }
     }
     generateChild(leafs){
@@ -78,22 +72,31 @@ export class No{
         let child = new No(father.deep+1, camp)
         child.father = father
         child.winTest()
-        if(father.deep >= 3){
-            
-            
-        }
         father.children.push(child)
         if(!child.leaf){
             leafs.push(child)
         }
     }
-    weightTell(value){
-        if(this.weight===0||this.father === null){
+    weightTell(){
+        if(this.father === null){
             return
         }
-        let num = (value/this.father.children.length).toFixed(2)
-        this.father.weight += parseFloat(num)
-        this.father.weightTell(value)
+        if(typeof this.father.weight === 'undefined'){
+            this.father.weight = this.weight
+        }else if(this.father.deep%2 === 0 && this.father.weight < this.weight){    
+            this.father.weight = this.weight
+        }else if(this.father.deep%2 !== 0 && this.father.weight > this.weight){
+            this.father.weight = this.weight
+        }
+    }
+    weightDefine(){
+        for(let node of this.children){
+            node.weightDefine()
+                node.weightTell()
+        }
+        if(typeof this.weight !== 'undefined'){
+            this.weightTell()
+        }
     }
     nextNo(campString){
         for(let no in this.children){
