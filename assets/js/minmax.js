@@ -105,4 +105,13 @@ export class No{
             }
         }
     }
+    bestPlay(){
+        this.children.sort((a,b) => {
+            if(a.weight > b.weight){
+                return -1 
+            }else{
+                return 1
+            }
+        })
+    }
 }

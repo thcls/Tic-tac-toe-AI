@@ -96,15 +96,12 @@ function getNo(){
 }
 function aiPlays(){
     let campString = campStringify()
-    no.children.sort((a,b) => {
-        if(a.weight > b.weight){
-            return -1 
-        }else{
-            return 1
-        }
-    })
+
+    no.bestPlay()
     no = no.children[0]
+
     let position = getCoordinate(campString, no)
+    
     campo[position[0]][position[1]].click(time%2===0)
 }
 function clickField(element){
