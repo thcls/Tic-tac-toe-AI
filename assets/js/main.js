@@ -98,7 +98,9 @@ function aiPlays(){
     let campString = campStringify()
 
     no.bestPlay()
-    no = no.children[0]
+    let index = Math.floor(Math.random() * no.children.length)
+    no = no.children[index]
+    
 
     let position = getCoordinate(campString, no)
     
