@@ -47,9 +47,9 @@ export class No{
             this.leaf = true
             
             if (this.deep%2==0){
-                this.weight = -1
+                this.weight = -10
             }else{
-                this.weight = 1
+                this.weight = 10 - this.deep
             }
             return true
         }
@@ -113,5 +113,10 @@ export class No{
                 return 1
             }
         })
+        for(let i = this.children.length - 1; i > 0; i--){
+            if(this.children[0].weight > this.children[i].weight){
+                this.children.pop()
+            }
+        }
     }
 }
